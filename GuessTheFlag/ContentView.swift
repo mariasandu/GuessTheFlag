@@ -45,10 +45,8 @@ struct ContentView: View {
                         } label: {
                             Image(countries[number])
                                 .renderingMode(.original)
-                            //  .clipShape(Capsule())
                                 .cornerRadius(30)
                                 .shadow(radius: 50)
-                            
                         }
                     }
                 }.frame(maxWidth: .infinity)
@@ -67,7 +65,7 @@ struct ContentView: View {
 //            Text("Your score is \(score)")
 //        }
         .alert("You've completed 8 questions", isPresented: $shouldReset) {
-            Button("Reset the game", action: reset)
+            Button("Reset the score", action: reset)
         } message: {
             Text("Your score is \(score)")
         }
@@ -78,7 +76,7 @@ struct ContentView: View {
         if number == correctAnswer {
             scoreTitle = "Correct"
             score += 1
-            if noOfQuestions > 2 {
+            if noOfQuestions > 8 {
                 shouldReset = true
             }
             
