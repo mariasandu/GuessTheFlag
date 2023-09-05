@@ -17,7 +17,6 @@ struct ContentView: View {
     @State private var score = 0
     @State private var noOfQuestions = 1
     @State private var shouldReset = false
-
     
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
@@ -41,7 +40,7 @@ struct ContentView: View {
                     }
                     ForEach(0..<3) { number in
                         Button {
-                            flagTapped(number)
+                                flagTapped(number)
                         } label: {
                             Image(countries[number])
                                 .renderingMode(.original)
@@ -49,21 +48,22 @@ struct ContentView: View {
                                 .shadow(radius: 50)
                         }
                     }
-                }.frame(maxWidth: .infinity)
-                    .padding(.vertical, 20)
-                    .background(.regularMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+                .background(.regularMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
                 Text("Score: \(score)")
-                    .foregroundColor(.white)
-                    .font(.title.bold())
+                    .titleStyle()
+//                    .modifier(Title())
+//                    .foregroundColor(.white)
+//                    .font(.title.bold())
             }
             
         }
         .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
-        } //message: {
-//            Text("Your score is \(score)")
-//        }
+        }
         .alert("You've completed 8 questions", isPresented: $shouldReset) {
             Button("Reset the score", action: reset)
         } message: {
@@ -73,18 +73,18 @@ struct ContentView: View {
     
     func flagTapped(_ number: Int) {
         noOfQuestions += 1
+        if noOfQuestions > 3 {
+            shouldReset = true
+        }
+        
         if number == correctAnswer {
             scoreTitle = "Correct"
             score += 1
-            if noOfQuestions > 8 {
-                shouldReset = true
-            }
-            
         } else {
             scoreTitle = "Wrong, this is the flag of \(countries[number])"
         }
-
         showingScore = true
+    
     }
     
     func askQuestion() {
@@ -97,6 +97,25 @@ struct ContentView: View {
         noOfQuestions = 1
     }
 }
+
+struct TitleModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .foregroundColor(.white)
+            .padding()
+            .background(.blue)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+extension View {
+    func titleStyle() -> some View {
+        modifier(TitleModifier())
+    }
+}
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
